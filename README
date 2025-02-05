@@ -1,0 +1,7 @@
+Very basic implementation of what is asked for.
+
+Run code OPENWEATHER_API_KEY=your_api_key go run main.go / .
+
+You can also define port as using PORT env key. Default is 8080.
+
+Yigit Ayaz

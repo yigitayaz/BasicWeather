@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .weather-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 8px;
+            width: 200px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .weather-icon {
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather</h1>
+    <div class="input-group">
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="fetchWeather()">Search</button>
+    </div>
+    <div id="weather-result" class="weather-card"></div>
+
+    <script>
+        function fetchWeather() {
+            const city = document.getElementById('city').value;
+            if (!city) {
+                alert('Please enter a city name');
+                return;
+            }
+
+            fetch(`/api/weather?city=${encodeURIComponent(city)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('City not found');
+                    return response.json();
+                })
+                .then(data => {
+                    const resultDiv = document.getElementById('weather-result');
+                    const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+                    resultDiv.innerHTML = `
+                        <h2>${data.name}</h2>
+                        <p>Temperature: ${data.main.temp} °C</p>
+                        <p>Humidity: ${data.main.humidity}%</p>
+                        <p>Conditions: 
+                            <img src="${iconUrl}" alt="${data.weather[0].description}" class="weather-icon">
+                            ${data.weather[0].description}
+                        </p>
+                    `;
+                })
+                .catch(error => alert(error.message));
+        }
+    </script>
+</body>
+</html>
